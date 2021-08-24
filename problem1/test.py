@@ -9,35 +9,35 @@ class TestDate(unittest.TestCase):
         self.assertEqual(
             Date(1983, 6, 22) - Date(1983, 6, 2),
             (datetime.date(1983, 6, 22) - datetime.date(1983, 6, 2)).days - 1
-        )
+        )  # 19 days
         self.assertEqual(
             Date(1984, 12, 25) - Date(1984, 7, 4),
             (datetime.date(1984, 12, 25) - datetime.date(1984, 7, 4)).days - 1
-        )
+        )  # 173 days
         self.assertEqual(
             Date(1989, 1, 3) - Date(1983, 8, 3),
             (datetime.date(1989, 1, 3) - datetime.date(1983, 8, 3)).days - 1
-        )
+        )  # 1979 days
 
     def test_invalid_inputs_raises(self):
         with self.assertRaises(InvalidInputException) as e:
             Date(1000, 1, 1)
-        self.assertEqual(str(e.exception), 'Invalid year')
+        self.assertEqual(str(e.exception), 'Invalid year on date: 1000-1-1')
 
         with self.assertRaises(InvalidInputException) as e:
             Date(1901, 13, 1)
-        self.assertEqual(str(e.exception), 'Invalid month')
+        self.assertEqual(str(e.exception), 'Invalid month on date: 1901-13-1')
 
         with self.assertRaises(InvalidInputException) as e:
             Date(1901, 2, 31)
-        self.assertEqual(str(e.exception), 'Invalid day')
+        self.assertEqual(str(e.exception), 'Invalid day on date: 1901-2-31')
 
         # should not raise
         Date(2000, 2, 29)
 
         with self.assertRaises(InvalidInputException) as e:
             Date(2000, 2, 30)
-        self.assertEqual(str(e.exception), 'Invalid day')
+        self.assertEqual(str(e.exception), 'Invalid day on date: 2000-2-30')
 
     def test_swap_dates_return_same_results(self):
         self.assertEqual(

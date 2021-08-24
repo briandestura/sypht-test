@@ -1,3 +1,7 @@
+import argparse
+import datetime
+
+
 class InvalidInputException(Exception):
     pass
 
@@ -15,17 +19,17 @@ class Date:
         self.day = day
 
         if not 1901 <= self.year <= 2999:
-            raise InvalidInputException('Invalid year')
+            raise InvalidInputException(f'Invalid year on date: {self.year}-{self.month}-{self.day}')
  
         if not 1 <= self.month <= 12:
-            raise InvalidInputException('Invalid month')
+            raise InvalidInputException(f'Invalid month on date: {self.year}-{self.month}-{self.day}')
 
         max_month_day = self.month_days[self.month] 
         if self.month == 2:
             max_month_day += 1 if Date.is_leap_year(self.year) else 0
 
         if not 1 <= self.day <= max_month_day:
-            raise InvalidInputException('Invalid day')
+            raise InvalidInputException(f'Invalid day on date: {self.year}-{self.month}-{self.day}')
 
     def _days_since_year(self):
         leap_years_since = len([i for i in range(0, self.year) if Date.is_leap_year(i)])
@@ -41,3 +45,24 @@ class Date:
 
     def __sub__(self, other):
         return abs(self.total_days() - other.total_days()) - 1
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'd1', help='First date (Y-m-d format)', type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'))
+    parser.add_argument(
+        'd2', help='Second date (Y-m-d format)', type=lambda s: datetime.datetime.strptime(s, '%Y-%m-%d'))
+    return parser.parse_args()
+
+
+def main(d1, d2):
+    d1 = Date(d1.year, d1.month, d1.day)
+    d2 = Date(d2.year, d2.month, d2.day)
+    print(d1 - d2)
+    return d1 - d2
+
+
+if __name__ == '__main__':
+    args = parse_arguments()
+    main(args.d1, args.d2)
